@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+	<link rel="stylesheet" href="studentdashboard.css">
+	<script type="module" src="studentdashboard.js" defer></script>
+ 
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+
+      <h2>Menu</h2>
+    </div>
+    <ul class="sidebar-links">
+    
+        <li>
+            <a href="index.html">
+              <span class="material-symbols-outlined"></span>Home</a>
+          </li>
+        <li>
+            <a href="studentdashboard.html">
+              <span class="material-symbols-outlined"></span>Dashboard</a>
+          </li>
+      <li>
+        <a href="#book"><span class="material-symbols-outlined"></span>Book Appointment</a>
+      </li>
+      <li>
+        <a href="#cancel"><span class="material-symbols-outlined"></span>Cancel Appointment</a>
+      </li>
+      <li>
+        <a href="#teacher"><span class="material-symbols-outlined"></span>Teacher List</a>
+      </li>
+      <li>
+        <a href="#history"><span class="material-symbols-outlined"></span>Booking History</a>
+      </li>
+      <li>
+        <a href="#message"><span class="material-symbols-outlined"></span>Send Message</a>
+      </li>
+      <li>
+        <a href="#profile"><span class="material-symbols-outlined"></span>Update Profile</a>
+      </li>
+      <li>
+        <a href="stlogin.html"><span class="material-symbols-outlined"></span>Logout</a>
+      </li>
+    </ul>
+  </aside>
+
+	
+	<!-- Book Appointment Section -->
+	<div class="book-appointment-section" id="book">
+		<h1>Book Appointment</h1>
+		<form>
+			<label for="teacher">Teacher ID:</label>
+			<input type="text" id="idno11" placeholder="Enter teacher id from teacher list"><br><br>
+			<label for="date">Select Date:</label>
+			<input type="date" id="date11" name="date"><br><br>
+			<label for="time">Select Time:</label>
+			<input type="time" id="time11" name="time"><br><br>
+			<button type="submit" id="book-appointment">Book Appointment</button>
+		</form>
+	</div>
+	
+	<!-- Cancel Appointment Section -->
+	<div class="cancel-appointment-section" id="cancel">
+		<h1>Cancel Appointment</h1>
+		<form>
+			<label for="booking-id">Enter Teacher ID:</label>
+			<input type="text" id="booking-id" name="booking-id" placeholder="Enter teacher id from booking history"><br><br>
+			<button type="submit" id="cancel-appointment">Cancel Appointment</button>
+		</form>
+	</div>
+
+	
+	<center>
+		<div class="tb1" id="teacher">
+			<h1>Teacher List</h1>
+	 <table>
+	   <thead>
+		 <th>SI_No</th>
+		 <th>Name</th>
+		 <th>Id_No</th>
+		 <th>Depertment</th>
+		 <th>Subject</th>
+	   </thead>
+	   <tbody id="tbody1"></tbody>
+	 </table>
+		</div>
+	</center>
+	
+	<!-- Booking History Section -->
+	 <center>
+	<div class="history-appointment-section" id="history">
+		<h1>Booking History</h1>
+        <table>
+			<thead>
+			  <th>SI_No</th>
+			  <th>Id_No</th>
+			  <th>Date</th>
+			  <th>Time</th>
+			</thead>
+			<tbody id="tbody2"></tbody>
+		  </table>
+	</div>
+	</center>
+
+	<!--send message-->
+	<div class="book-appointment-section" id="message">
+		<h1>Send Message</h1>
+		<form>
+			<label for="name">Name:</label>
+			<input type="text" id="name200" name="name" placeholder="Enter your name"><br><br>
+			<label for="roll">Roll:</label>
+			<input type="text" id="roll200" name="roll" placeholder="Enter your roll"><br><br>
+			<label for="mess">Message:</label>
+			<textarea name="mess" id="mess200" class="mess" placeholder="Enter your message here"></textarea>
+			<button type="submit" id="send-message">Send</button>
+		</form>
+	</div>
+	
+	<!-- Profile Section -->
+	<div class="profile-section" id="profile">
+		<h1>Update Profile</h1>
+		<form>
+			<label for="roll">Roll No:</label>
+			<input type="text" id="roll21" name="roll" placeholder="Enter your existing roll number"><br><br>
+			<label for="name">Name:</label>
+			<input type="text" id="name21" name="name"><br><br>
+			<label for="email">Email:</label>
+			<input type="email" id="email21" name="email"><br><br>
+			<label for="password">Password:</label>
+			<input type="password" id="password21" name="password"><br><br>
+			<button type="submit" id="update-profile">Update Profile</button>
+		</form>
+	</div>
+	
+	<!-- JavaScript Files -->
+	<script type="module" defer>
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+		import {getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+		// Your web app's Firebase configuration
+		const firebaseConfig = {
+    apiKey: "AIzaSyAK-TUg-0XGtKVdDpOjOAJvhhitG_9PMhg",
+    authDomain: "subratapal-1b04b.firebaseapp.com",
+    projectId: "subratapal-1b04b",
+    storageBucket: "subratapal-1b04b.appspot.com",
+    messagingSenderId: "602213770474",
+    appId: "1:602213770474:web:70452290a12ffcb97c2393",
+    measurementId: "G-H1XCHTGDTD"
+  };
+
+  
+		const app = initializeApp(firebaseConfig);
+		const db = getDatabase(app);
+		//filling table
+  
+		var stno = 0;
+		var tbody = document.getElementById("tbody1");
+  
+		function additemstotable(name5, idno5, dept5, sub5) {
+		  let trow = document.createElement("tr");
+		  let td1 = document.createElement('td');
+		  let td2 = document.createElement('td');
+		  let td3 = document.createElement('td');
+		  let td4 = document.createElement('td');
+		  let td5 = document.createElement('td');
+  
+		  td1.innerHTML = ++stno;
+		  td2.innerHTML = name5;
+		  td3.innerHTML = idno5;
+		  td4.innerHTML = dept5;
+		  td5.innerHTML = sub5;
+  
+		  trow.appendChild(td1);
+		  trow.appendChild(td2);
+		  trow.appendChild(td3);
+		  trow.appendChild(td4);
+		  trow.appendChild(td5);
+  
+		  tbody.appendChild(trow);
+		}
+  
+		function addallitemstotable(TheTeacher) {
+		  stno = 0;
+		  tbody.innerHTML = "";
+		  TheTeacher.forEach((element) => {
+			additemstotable( element.Name, element.Id_No, element.Depertment, element.Subject);
+		  });
+		}
+  
+		//getting all Data
+		function getalldataonces() {
+		  const dbRef = ref(db);
+		  get(child(dbRef, "TeacherList")).then((snapshot) => {
+			var Teachers = [];
+			snapshot.forEach((childSnapshot) => {
+			  Teachers.push(childSnapshot.val());
+			});
+			addallitemstotable(Teachers);
+		  });
+		}
+  
+		function getalldatarealtime(){
+		  const dbref=ref(db,"TeacherList");
+		  onValue(dbref,(snapshot)=>{
+			var Teachers=[];
+			snapshot.forEach(childSnapshot=>{
+			  Teachers.push(childSnapshot.val());
+			});
+			addallitemstotable(Teachers);
+		  })
+		}
+	
+
+		var stno1 = 0;
+		var tbody2 = document.getElementById("tbody2");
+  
+		function aitt(idno50, date50, time50) {
+		  let trow1 = document.createElement("tr");
+		  let td11 = document.createElement('td');
+		  let td21 = document.createElement('td');
+		  let td31 = document.createElement('td');
+		  let td41 = document.createElement('td');
+  
+		  td11.innerHTML = ++stno1;
+		  td21.innerHTML = idno50;
+		  td31.innerHTML = date50;
+		  td41.innerHTML = time50;
+  
+		  trow1.appendChild(td11);
+		  trow1.appendChild(td21);
+		  trow1.appendChild(td31);
+		  trow1.appendChild(td41);
+  
+		  tbody2.appendChild(trow1);
+		}
+  
+		function aaitt(TheTeacher2) {
+		  stno1 = 0;
+		  tbody2.innerHTML = "";
+		  TheTeacher2.forEach((element) => {
+			aitt(element.Id_No, element.Date, element.Time);
+		  });
+		}
+  
+		//getting all Data
+		function gado() {
+		  const dbRef3 = ref(db);
+		  get(child(dbRef3, "AppointmentList")).then((snapshot) => {
+			var Teachers3 = [];
+			snapshot.forEach((childSnapshot) => {
+			  Teachers3.push(childSnapshot.val());
+			});
+			aaitt(Teachers3);
+		  });
+		}
+  
+		function gadrt(){
+		  const dbref2=ref(db,"AppointmentList");
+		  onValue(dbref2,(snapshot)=>{
+			var Teachers2=[];
+			snapshot.forEach(childSnapshot=>{
+			  Teachers2.push(childSnapshot.val());
+			});
+			aaitt(Teachers2);
+			//calling teacherlist function
+			getalldatarealtime();
+		  })
+		}
+        //calling booking history function
+     	window.onload = gadrt;
+
+	  </script>
+
+
+</body>
+</html>

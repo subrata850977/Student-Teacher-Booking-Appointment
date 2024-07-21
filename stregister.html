@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Student Register</title>
+	<link rel="stylesheet" href="stregister.css">
+	<script type="module" src="stregister.js" defer></script>
+</head>
+<body>
+	<div class="register-container">
+		<h1>Student Register</h1>
+		<form>
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" required><br><br>
+			<label for="roll">Roll No:</label>
+			<input type="text" id="roll" name="roll" required><br><br>
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email" required><br><br>
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" required><br><br>
+			<button type="submit" id="submit">Register</button>
+			<p>Have an account? <a href="stlogin.html">Login Here</a></p>
+		</form>
+		<div class="register-background">
+			<div class="register-background-image"></div>
+			<div class="register-background-overlay"></div>
+		</div>
+	</div>
+</body>
+</html>

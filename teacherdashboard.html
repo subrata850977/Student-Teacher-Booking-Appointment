@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="teacherdashboard.css">
+	<script type="module" src="teacherdashboard.js" defer></script>
+</head>
+<body>
+
+	<aside class="sidebar">
+		<div class="sidebar-header">
+	
+		  <h2>Menu</h2>
+		</div>
+		<ul class="sidebar-links">
+		
+			<li>
+				<a href="index.html">
+				  <span class="material-symbols-outlined"></span>Home</a>
+			  </li>
+			<li>
+				<a href="teacherdashboard.html">
+				  <span class="material-symbols-outlined"></span>Dashboard</a>
+			  </li>
+		  <li>
+			<a href="#history"><span class="material-symbols-outlined"></span>Booking List</a>
+		  </li>
+		  <li>
+			<a href="#update"><span class="material-symbols-outlined"></span>Update Appointment</a>
+		  </li>
+		  <li>
+			<a href="#cancel"><span class="material-symbols-outlined"></span>Cancel Appointment</a>
+		  </li>
+		  <li>
+			<a href="#message"><span class="material-symbols-outlined"></span>Message Box</a>
+		  </li>
+		  <li>
+			<a href="#delete"><span class="material-symbols-outlined"></span>Delete Messages</a>
+		  </li>
+		  <li>
+			<a href="#profile"><span class="material-symbols-outlined"></span>Update Profile</a>
+		  </li>
+		  <li>
+			<a href="teacherlogin.html"><span class="material-symbols-outlined"></span>Logout</a>
+		  </li>
+		</ul>
+	  </aside>
+
+
+    <!-- Booking History Section -->
+	 <center>
+        <div class="history-appointment-section" id="history">
+            <h1>Appointment List</h1>
+            <table>
+                <thead>
+                  <th>SI_No</th>
+                  <th>Id_No</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                </thead>
+                <tbody id="tbody2"></tbody>
+              </table>
+        </div>
+        </center>
+
+
+    <!-- Update Appointment Section -->
+	<div class="book-appointment-section" id="update">
+		<h1>Update Appointment</h1>
+		<form>
+			<label for="teacher">ID No:</label>
+			<input type="text" id="idno11" placeholder="Enter existing id no from booking history"><br><br>
+			<label for="date">Select Date:</label>
+			<input type="date" id="date11" name="date"><br><br>
+			<label for="time">Select Time:</label>
+			<input type="time" id="time11" name="time"><br><br>
+			<button type="submit" id="update-appointment">Update</button>
+		</form>
+	</div>
+	
+	<!-- Cancel Appointment Section -->
+	<div class="cancel-appointment-section" id="cancel">
+		<h1>Cancel Appointment</h1>
+		<form>
+			<label for="booking-id1">Enter Teacher ID:</label>
+			<input type="text" id="booking-id1" name="booking-id1" placeholder="Enter existing id no from booking history"><br><br>
+			<button type="submit" id="cancel-appointment">Cancel Appointment</button>
+		</form>
+	</div>
+
+	<!-- messages Section -->
+	<center>
+		<div class="message-section" id="message">
+			<h1>Message Box</h1>
+			<table>
+				<thead>
+				  <th>SI_No</th>
+				  <th>Name</th>
+				  <th>Roll No</th>
+				  <th>Message</th>
+				</thead>
+				<tbody id="tbody3"></tbody>
+			  </table>
+		</div>
+		</center>
+
+		<!-- delete message Section -->
+	<div class="cancel-appointment-section" id="delete">
+		<h1>Delete Message</h1>
+		<form>
+			<label for="booking-id1">Enter Roll No:</label>
+			<input type="text" id="roll121" name="booking-id1" placeholder="Enter existing roll no from message box"><br><br>
+			<button type="submit" id="delete-message">Delete</button>
+		</form>
+	</div>
+
+
+    <!-- Profile Section -->
+	<div class="profile-section" id="profile">
+		<h1>Update Profile</h1>
+		<form>
+			<label for="idno100">Id_No:</label>
+			<input type="text" id="idno100" name="idno100" placeholder="Enter your existing id number"><br><br>
+			<label for="email">Email:</label>
+			<input type="email" id="email21" name="email"><br><br>
+			<label for="password">Password:</label>
+			<input type="password" id="password21" name="password"><br><br>
+			<button type="submit" id="update-profile">Update Profile</button>
+		</form>
+	</div>
+
+
+
+    <!-- JavaScript Files -->
+	<script type="module" defer>
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+		import {getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+		// Your web app's Firebase configuration
+		const firebaseConfig = {
+    apiKey: "AIzaSyAK-TUg-0XGtKVdDpOjOAJvhhitG_9PMhg",
+    authDomain: "subratapal-1b04b.firebaseapp.com",
+    projectId: "subratapal-1b04b",
+    storageBucket: "subratapal-1b04b.appspot.com",
+    messagingSenderId: "602213770474",
+    appId: "1:602213770474:web:70452290a12ffcb97c2393",
+    measurementId: "G-H1XCHTGDTD"
+  };
+
+  
+		const app = initializeApp(firebaseConfig);
+		const db = getDatabase(app);
+		//filling table
+        var stno1 = 0;
+		var tbody2 = document.getElementById("tbody2");
+  
+		function aitt(idno50, date50, time50) {
+		  let trow1 = document.createElement("tr");
+		  let td11 = document.createElement('td');
+		  let td21 = document.createElement('td');
+		  let td31 = document.createElement('td');
+		  let td41 = document.createElement('td');
+  
+		  td11.innerHTML = ++stno1;
+		  td21.innerHTML = idno50;
+		  td31.innerHTML = date50;
+		  td41.innerHTML = time50;
+  
+		  trow1.appendChild(td11);
+		  trow1.appendChild(td21);
+		  trow1.appendChild(td31);
+		  trow1.appendChild(td41);
+  
+		  tbody2.appendChild(trow1);
+		}
+  
+		function aaitt(TheTeacher2) {
+		  stno1 = 0;
+		  tbody2.innerHTML = "";
+		  TheTeacher2.forEach((element) => {
+			aitt(element.Id_No, element.Date, element.Time);
+		  });
+		}
+  
+		//getting all Data
+		function gado() {
+		  const dbRef3 = ref(db);
+		  get(child(dbRef3, "AppointmentList")).then((snapshot) => {
+			var Teachers3 = [];
+			snapshot.forEach((childSnapshot) => {
+			  Teachers3.push(childSnapshot.val());
+			});
+			aaitt(Teachers3);
+		  });
+		}
+  
+		function gadrt(){
+		  const dbref2=ref(db,"AppointmentList");
+		  onValue(dbref2,(snapshot)=>{
+			var Teachers2=[];
+			snapshot.forEach(childSnapshot=>{
+			  Teachers2.push(childSnapshot.val());
+			});
+			aaitt(Teachers2);
+		  })
+		}
+
+		//view messages
+
+		var stno10 = 0;
+		var tbody20 = document.getElementById("tbody3");
+  
+		function aitt11(idno500, date500, time500) {
+		  let trow10 = document.createElement("tr");
+		  let td110 = document.createElement('td');
+		  let td210 = document.createElement('td');
+		  let td310 = document.createElement('td');
+		  let td410 = document.createElement('td');
+  
+		  td110.innerHTML = ++stno10;
+		  td210.innerHTML = idno500;
+		  td310.innerHTML = date500;
+		  td410.innerHTML = time500;
+  
+		  trow10.appendChild(td110);
+		  trow10.appendChild(td210);
+		  trow10.appendChild(td310);
+		  trow10.appendChild(td410);
+  
+		  tbody20.appendChild(trow10);
+		}
+  
+		function aaitt11(TheTeacher22) {
+		  stno10 = 0;
+		  tbody20.innerHTML = "";
+		  TheTeacher22.forEach((element) => {
+			aitt11(element.Name, element.Roll, element.Message);
+		  });
+		}
+  
+		//getting all Data
+		function gado11() {
+		  const dbRef33 = ref(db);
+		  get(child(dbRef33, "Messages")).then((snapshot) => {
+			var Teachers33 = [];
+			snapshot.forEach((childSnapshot) => {
+			  Teachers33.push(childSnapshot.val());
+			});
+			aaitt11(Teachers33);
+		  });
+		}
+  
+		function gadrt11(){
+		  const dbref22=ref(db,"Messages");
+		  onValue(dbref22,(snapshot)=>{
+			var Teachers22=[];
+			snapshot.forEach(childSnapshot=>{
+			  Teachers22.push(childSnapshot.val());
+			});
+			aaitt11(Teachers22);
+			//calling booking history function
+	    	gadrt();
+		  })
+		}
+     	window.onload = gadrt11;
+
+	  </script>
+    
+</body>
+</html>

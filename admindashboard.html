@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admindashboard.css" />
+    <script type="module" src="admindashboard.js" defer></script>
+
+  </head>
+  <body>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+  
+        <h2>Menu</h2>
+      </div>
+      <ul class="sidebar-links">
+      
+          <li>
+              <a href="index.html">
+                <span class="material-symbols-outlined"></span>Home</a>
+            </li>
+          <li>
+              <a href="admindashboard.html">
+                <span class="material-symbols-outlined"></span>Dashboard</a>
+            </li>
+        <li>
+          <a href="#add"><span class="material-symbols-outlined"></span>Add Teacher</a>
+        </li>
+        <li>
+          <a href="#update"><span class="material-symbols-outlined"></span>Update Teacher</a>
+        </li>
+        <li>
+          <a href="#delete"><span class="material-symbols-outlined"></span>Delete Teacher</a>
+        </li>
+        <li>
+          <a href="#view"><span class="material-symbols-outlined"></span>Teacher List</a>
+        </li>
+        <li>
+          <a href="adminlogin.html"><span class="material-symbols-outlined"></span>Logout</a>
+        </li>
+      </ul>
+    </aside>
+
+
+    <h1 id="add">Add Teacher</h1>
+
+    <div class="container">
+      <form id="add-teacher-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" /><br /><br />
+        <label for="id-no">ID No:</label>
+        <input type="text" id="id-no" name="id-no" /><br /><br />
+        <label for="email">Depertment:</label>
+        <input type="text" id="depertment" name="depertment" /><br /><br />
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" /><br /><br />
+        <button id="add-teacher-btn" type="submit">Add Teacher</button>
+      </form>
+    </div>
+
+    <h1 id="update">Update Teacher</h1>
+    <div class="container">
+      <form id="update-teacher-form">
+        <label for="id-no">ID No:</label>
+        <input
+          type="text"
+          id="id-no1"
+          name="id-no"
+          placeholder="Enter your existing id no"
+        /><br /><br />
+        <label for="name">Name:</label>
+        <input type="text" id="name1" name="name" /><br /><br />
+        <label for="email">Depertment:</label>
+        <input type="text" id="depertment1" name="depertment" /><br /><br />
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject1" name="subject" /><br /><br />
+        <button id="update-teacher-btn" type="submit">Update Teacher</button>
+      </form>
+    </div>
+
+    <h1 id="delete">Delete Teacher</h1>
+    <div class="container">
+      <form id="delete-teacher-form">
+        <label for="id-no">ID No:</label>
+        <input
+          type="text"
+          id="id-no2"
+          name="id-no"
+          placeholder="Enter registered Id Number"
+        /><br /><br />
+        <button id="delete-teacher-btn">Delete Teacher</button>
+      </form>
+    </div>
+
+    <h1 id="view">Teacher List</h1>
+ <center>
+  <table>
+    <thead>
+      <th>SI_No</th>
+      <th>Name</th>
+      <th>Id_No</th>
+      <th>Depertment</th>
+      <th>Subject</th>
+    </thead>
+    <tbody id="tbody1"></tbody>
+  </table>
+ </center>
+    
+    <script type="module" defer>
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+      import {getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+    apiKey: "AIzaSyAK-TUg-0XGtKVdDpOjOAJvhhitG_9PMhg",
+    authDomain: "subratapal-1b04b.firebaseapp.com",
+    projectId: "subratapal-1b04b",
+    storageBucket: "subratapal-1b04b.appspot.com",
+    messagingSenderId: "602213770474",
+    appId: "1:602213770474:web:70452290a12ffcb97c2393",
+    measurementId: "G-H1XCHTGDTD"
+  };
+
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      //filling table
+
+      var stno = 0;
+      var tbody = document.getElementById("tbody1");
+
+      function additemstotable(name5, idno5, dept5, sub5) {
+        let trow = document.createElement("tr");
+        let td1 = document.createElement('td');
+        let td2 = document.createElement('td');
+        let td3 = document.createElement('td');
+        let td4 = document.createElement('td');
+        let td5 = document.createElement('td');
+
+        td1.innerHTML = ++stno;
+        td2.innerHTML = name5;
+        td3.innerHTML = idno5;
+        td4.innerHTML = dept5;
+        td5.innerHTML = sub5;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+
+        tbody.appendChild(trow);
+      }
+
+      function addallitemstotable(TheTeacher) {
+        stno = 0;
+        tbody.innerHTML = "";
+        TheTeacher.forEach((element) => {
+          additemstotable( element.Name, element.Id_No, element.Depertment, element.Subject);
+        });
+      }
+
+      //getting all Data
+      function getalldataonces() {
+        const dbRef = ref(db);
+        get(child(dbRef, "TeacherList")).then((snapshot) => {
+          var Teachers = [];
+          snapshot.forEach((childSnapshot) => {
+            Teachers.push(childSnapshot.val());
+          });
+          addallitemstotable(Teachers);
+        });
+      }
+
+      function getalldatarealtime(){
+        const dbref=ref(db,"TeacherList");
+        onValue(dbref,(snapshot)=>{
+          var Teachers=[];
+          snapshot.forEach(childSnapshot=>{
+            Teachers.push(childSnapshot.val());
+          });
+          addallitemstotable(Teachers);
+        })
+      }
+      window.onload = getalldatarealtime;
+    </script>
+  </body>
+</html>
